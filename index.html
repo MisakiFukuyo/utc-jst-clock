@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UTC / JST Clock</title>
+  <style>
+    .container{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      width: 100%;
+    }
+    .clock{
+      margin: 1rem;
+      font-family: monospace;
+      font-size:40px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="clock jst">
+      <div class="text js-jst-date-text"></div>
+      <div class="text js-jst-time-text"></div>
+      <div class="text timezone">JST</div>
+    </div>
+    <div class="clock utc">
+      <div class="text js-utc-date-text"></div>
+      <div class="text js-utc-time-text"></div>
+      <div class="text timezone">UTC</div>
+    </div>
+  </div>
+  <script>
+    window.addEventListener('DOMContentLoaded', function(){
+      const utcDateText = document.querySelector('.js-utc-date-text')
+      const utcTimeText = document.querySelector('.js-utc-time-text')
+      const jstDateText = document.querySelector('.js-jst-date-text')
+      const jstTimeText = document.querySelector('.js-jst-time-text')
+      const jstUtcDiff = 9 * 60 * 60 * 1000;
+      function zero2Pad(n){
+        if(n < 10){
+          return `0${n}`;
+        }else{
+          return `${n}`;
+        }
+      }
+      function render(){
+        const current = new Date();
+        jstDateText.textContent = `${current.getFullYear()}-${zero2Pad(current.getMonth()+1)}-${zero2Pad(current.getDate())}`;
+        jstTimeText.textContent = `${zero2Pad(current.getHours())}:${zero2Pad(current.getMinutes())}:${zero2Pad(current.getSeconds())}`;
+        const utcCurrent = new Date(current.getTime() - jstUtcDiff);
+        utcDateText.textContent = `${utcCurrent.getFullYear()}-${zero2Pad(utcCurrent.getMonth()+1)}-${zero2Pad(utcCurrent.getDate())}`;
+        utcTimeText.textContent = `${zero2Pad(utcCurrent.getHours())}:${zero2Pad(utcCurrent.getMinutes())}:${zero2Pad(utcCurrent.getSeconds())}`;
+        requestAnimationFrame(render);
+      }
+      render();
+    })
+  </script>
+</body>
+</html>
